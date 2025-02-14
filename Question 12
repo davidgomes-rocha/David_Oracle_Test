@@ -1,0 +1,42 @@
+Objective:
+
+The goal is to export stock data for each location (loc) into separate CSV files.
+
+Since this operation involves handling files within Oracle PL/SQL, we will use UTL_FILE, which is Oracle's built-in package for file I/O operations.
+
+How the Process Works:
+
+-Retrieve a list of unique locations (loc values).
+-Loop through each loc, generating a separate CSV file.
+-Write the stock data for each loc into its corresponding CSV file.
+-Close the file properly after writing the data.
+
+PL/SQL Implementation:
+
+DECLARE
+    CURSOR c_loc IS SELECT DISTINCT loc FROM item_loc_soh; -- Get unique locations
+    v_file UTL_FILE.FILE_TYPE;
+    v_sql VARCHAR2(1000);
+BEGIN
+    FOR r IN c_loc LOOP
+        -- Open a new file for each location
+        v_file := UTL_FILE.FOPEN('/path/', 'loc_' || r.loc || '.csv', 'W');
+
+        -- SQL to get stock data for the location
+        v_sql := 'SELECT item || '','' || dept || '','' || unit_cost || '','' || stock_on_hand || '','' || (unit_cost * stock_on_hand)
+                  FROM item_loc_soh WHERE loc = ' || r.loc;
+
+        -- Write headers
+        UTL_FILE.PUT_LINE(v_file, 'ITEM,DEPT,UNIT_COST,STOCK_ON_HAND,STOCK_VALUE');
+
+        -- Write each record to the CSV file
+        FOR rec IN (EXECUTE IMMEDIATE v_sql) LOOP
+            UTL_FILE.PUT_LINE(v_file, rec);
+        END LOOP;
+
+        -- Close the file
+        UTL_FILE.FCLOSE(v_file);
+    END LOOP;
+END;
+/
+
