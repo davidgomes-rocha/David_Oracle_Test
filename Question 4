@@ -1,0 +1,4 @@
+SQL Implementation:
+CREATE VIEW v_stock_summary AS
+SELECT item, loc, dept, unit_cost, stock_on_hand, (unit_cost * stock_on_hand) AS stock_value
+FROM item_loc_soh;
