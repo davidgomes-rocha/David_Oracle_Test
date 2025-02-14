@@ -1,0 +1,29 @@
+Objective
+The goal is to restrict user access to stock data based on their assigned departments. This ensures that:
+-Users can only view data relevant to their role.
+-Unauthorized users cannot access sensitive stock information.
+-The system maintains data security and performance efficiency by filtering results at the database level.
+
+How the Filtering Mechanism Works:
+-We have a user_dept table that defines which departments each user is allowed to access. (table created at question 5)
+-The function user_dept_filter returns a filtered dataset:
+  -It retrieves stock data only for the departments that a given user is authorized to view.
+  -Returns a SYS_REFCURSOR (a pointer to a dataset) that can be used in an APEX report, application, or another procedure.
+
+PL/SQL Implementation:
+
+CREATE OR REPLACE FUNCTION user_dept_filter(p_user_id VARCHAR2) RETURN SYS_REFCURSOR AS
+    v_cursor SYS_REFCURSOR;
+BEGIN
+    OPEN v_cursor FOR
+    SELECT ils.*
+    FROM item_loc_soh ils
+    JOIN user_dept ud ON ils.dept = ud.dept
+    WHERE ud.user_id = p_user_id;
+
+    RETURN v_cursor;
+END;
+/
+
+
+
