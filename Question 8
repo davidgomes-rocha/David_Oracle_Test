@@ -1,0 +1,19 @@
+Objective:
+
+The goal is to optimize the retrieval of location descriptions by using a pipelined function.
+
+
+SQL Implementation:
+
+--Before defining the function, we need to create a collection type that represents a list of location descriptions.
+CREATE OR REPLACE TYPE loc_table_type AS TABLE OF VARCHAR2(25);
+/
+
+CREATE OR REPLACE FUNCTION pipeline_loc_list RETURN loc_table_type PIPELINED AS
+BEGIN
+    FOR r IN (SELECT loc_desc FROM loc ORDER BY loc_desc) LOOP
+        PIPE ROW (r.loc_desc);
+    END LOOP;
+    RETURN;
+END;
+/
