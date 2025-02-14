@@ -1,0 +1,11 @@
+Explanation:
+
+To reduce contention and improve concurrency:
+
+-Enable Row Movement → Allows Oracle to rebalance data.
+-Use Row-Level Locks → Prevents unnecessary full-table locks.
+
+SQL Implementation:
+
+ALTER TABLE item_loc_soh ENABLE ROW MOVEMENT;
+LOCK TABLE item_loc_soh IN ROW SHARE MODE;
