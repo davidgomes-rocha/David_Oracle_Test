@@ -17,26 +17,42 @@ DECLARE
     CURSOR c_loc IS SELECT DISTINCT loc FROM item_loc_soh; -- Get unique locations
     v_file UTL_FILE.FILE_TYPE;
     v_sql VARCHAR2(1000);
+    v_item NUMBER;
+    v_dept NUMBER;
+    v_unit_cost NUMBER(10,2);
+    v_stock_on_hand NUMBER;
+    v_stock_value NUMBER(12,2);
+    v_cur SYS_REFCURSOR;
 BEGIN
     FOR r IN c_loc LOOP
-        -- Open a new file for each location
-        v_file := UTL_FILE.FOPEN('/path/', 'loc_' || r.loc || '.csv', 'W');
+        -- Open a new CSV file for each location
+        v_file := UTL_FILE.FOPEN('CSV_EXPORT_DIR', 'loc_' || r.loc || '.csv', 'W');
 
-        -- SQL to get stock data for the location
-        v_sql := 'SELECT item || '','' || dept || '','' || unit_cost || '','' || stock_on_hand || '','' || (unit_cost * stock_on_hand)
-                  FROM item_loc_soh WHERE loc = ' || r.loc;
-
-        -- Write headers
+        -- Write CSV header
         UTL_FILE.PUT_LINE(v_file, 'ITEM,DEPT,UNIT_COST,STOCK_ON_HAND,STOCK_VALUE');
 
-        -- Write each record to the CSV file
-        FOR rec IN (EXECUTE IMMEDIATE v_sql) LOOP
-            UTL_FILE.PUT_LINE(v_file, rec);
+        -- Define the query for stock data
+        v_sql := 'SELECT item, dept, unit_cost, stock_on_hand, (unit_cost * stock_on_hand) AS stock_value 
+                  FROM item_loc_soh WHERE loc = :loc';
+
+        -- Open a dynamic cursor
+        OPEN v_cur FOR v_sql USING r.loc;
+
+        -- Fetch rows from the cursor and write to file
+        LOOP
+            FETCH v_cur INTO v_item, v_dept, v_unit_cost, v_stock_on_hand, v_stock_value;
+            EXIT WHEN v_cur%NOTFOUND;
+
+            -- Write data row to CSV file
+            UTL_FILE.PUT_LINE(v_file, v_item || ',' || v_dept || ',' || v_unit_cost || ',' || v_stock_on_hand || ',' || v_stock_value);
         END LOOP;
 
-        -- Close the file
+        -- Close cursor and file
+        CLOSE v_cur;
         UTL_FILE.FCLOSE(v_file);
     END LOOP;
 END;
 /
 
+
+Not been able to run it...
