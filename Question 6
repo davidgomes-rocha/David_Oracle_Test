@@ -44,7 +44,7 @@ CREATE OR REPLACE PACKAGE BODY stock_pkg AS
         v_error_message VARCHAR2(4000);
         v_error_code NUMBER;
     BEGIN
-        INSERT INTO item_loc_soh_history (item, loc, dept, unit_cost, stock_on_hand, stock_value, timestamp)
+        INSERT INTO item_loc_soh_history (item, loc, dept, unit_cost, stock_on_hand, stock_value, record_timestamp)
         SELECT item, loc, dept, unit_cost, stock_on_hand, (unit_cost * stock_on_hand), SYSTIMESTAMP
         FROM item_loc_soh
         WHERE p_loc IS NULL OR loc = p_loc;
