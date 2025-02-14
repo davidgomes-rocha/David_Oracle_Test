@@ -27,8 +27,15 @@ Primary Key for item_loc_soh
 Extra:
 -dept does not define uniqueness because multiple items can belong to the same dept at the same loc.
 -The real uniqueness constraint is item + loc → A product in a store should not have two separate stock records.
--Instead of adding dept to the PK, we create an index on dept for better search performance
-CREATE INDEX idx_item_loc_soh_dept ON item_loc_soh (dept);
+-Instead of adding dept to the PK, we create an index on dept for better search performance:
+CREATE INDEX idx_item_loc_soh_dept ON item_loc_soh (dept)
+-query to verify that (item, loc) is unique in your data:
+SELECT item, loc, COUNT(*) AS duplicate_count
+FROM item_loc_soh
+GROUP BY item, loc
+HAVING COUNT(*) > 1;
+
+
 
 -- Foreign Keys
 
