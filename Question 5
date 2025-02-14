@@ -1,0 +1,11 @@
+Explanation:
+
+This table ensures that users can only see stock data for their assigned departments.
+
+SQL Implementation:
+
+CREATE TABLE user_dept (
+    user_id VARCHAR2(50) NOT NULL,
+    dept NUMBER(4) NOT NULL,
+    PRIMARY KEY (user_id, dept)
+);
