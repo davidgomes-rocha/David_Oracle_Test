@@ -1,4 +1,4 @@
-**Question 1:**
+Question 1:
 
 -- Primary Keys
 
@@ -11,6 +11,24 @@ ALTER TABLE loc ADD CONSTRAINT pk_loc PRIMARY KEY (loc);
 ALTER TABLE item_loc_soh ADD CONSTRAINT pk_item_loc_soh PRIMARY KEY (item, loc);
 
 Explanation:
+Primary Key for item:
+-pk_item (item) ensures that each item in the catalog is unique.
+-Without this, duplicate item IDs could exist, leading to inconsistent product references.
+
+Primary Key for loc
+-pk_loc (loc) ensures that each location (store/warehouse) is uniquely identified.
+-Prevents duplicate store/warehouse records.
+
+Primary Key for item_loc_soh
+-pk_item_loc_soh (item, loc) ensures that each item appears only once per location.
+-This prevents stock duplication for the same item at the same loc.
+-dept is not included because it is an attribute of item, not a unique identifier.
+
+Extra:
+-dept does not define uniqueness because multiple items can belong to the same dept at the same loc.
+-The real uniqueness constraint is item + loc → A product in a store should not have two separate stock records.
+-Instead of adding dept to the PK, we create an index on dept for better search performance
+CREATE INDEX idx_item_loc_soh_dept ON item_loc_soh (dept);
 
 -- Foreign Keys
 
