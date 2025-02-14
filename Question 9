@@ -1,0 +1,16 @@
+Objective
+
+The goal is to optimize queries on the item_loc_soh table by improving performance through indexes and analyzing execution plans using EXPLAIN PLAN.
+
+Since the test mentions that users frequently search by dept, and queries often filter using loc, we need to:
+-Ensure efficient indexing to speed up searches.
+-Avoid Full Table Scans (FTS) that degrade performance.
+-Use EXPLAIN PLAN to analyze how queries are executed and improve them accordingly.
+
+SQL Implementation:
+
+CREATE INDEX idx_item_loc_soh_loc_dept ON item_loc_soh (loc, dept);
+
+EXPLAIN PLAN FOR
+SELECT * FROM item_loc_soh WHERE loc = 652 AND dept = 68;
+SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);
