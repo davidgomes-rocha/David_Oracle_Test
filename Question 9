@@ -2,15 +2,30 @@ Objective
 
 The goal is to optimize queries on the item_loc_soh table by improving performance through indexes and analyzing execution plans using EXPLAIN PLAN.
 
+Analysis of the Execution Plan:
+-TABLE ACCESS FULL on ITEM_LOC_SOH → reading the entire table to find matching rows.
+-Filtering by LOC and DEPT is not effective without an index.
+
+
 Since the test mentions that users frequently search by dept, and queries often filter using loc, we need to:
 -Ensure efficient indexing to speed up searches.
 -Avoid Full Table Scans (FTS) that degrade performance.
 -Use EXPLAIN PLAN to analyze how queries are executed and improve them accordingly.
+-Create INDEX since users frequently search by LOC and DEPT.
 
 SQL Implementation:
 
 CREATE INDEX idx_item_loc_soh_loc_dept ON item_loc_soh (loc, dept);
 
+******Error while creating********
+Error at line 1/43: ORA-01536: space quota exceeded for tablespace 'APEX_BIGFILE_INSTANCE_TBS3'
+1. CREATE INDEX idx_item_loc_soh_loc_dept ON item_loc_soh (loc, dept);
+******
+
 EXPLAIN PLAN FOR
-SELECT * FROM item_loc_soh WHERE loc = 652 AND dept = 68;
+SELECT * FROM item_loc_soh WHERE loc = 101 AND dept = 84;
 SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);
+
+
+Notes:
+I couldn't see the explain plan in the apex....
