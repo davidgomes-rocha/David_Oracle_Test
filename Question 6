@@ -1,6 +1,11 @@
 Explanation:
 
 The PL/SQL package stock_pkg provides a structured way to capture and store historical stock data from item_loc_soh into item_loc_soh_history. This is essential for auditing, tracking changes, and analyzing past stock levels.
+If the procedure runs successfully, it copies the stock data and commits.
+If an error occurs:
+-The error is logged in the error_log table.
+-The transaction is rolled back to prevent partial updates.
+
 
 p_loc (Optional Parameter):
 -If p_loc is provided → Copies stock history only for the specified location.
