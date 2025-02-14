@@ -1,0 +1,8 @@
+BEGIN
+    stock_pkg.save_stock_history;
+END;
+/
+
+Not been able to run it...
+
+ORA-01536: space quota exceeded for tablespace 'APEX_BIGFILE_INSTANCE_TBS3' ORA-06512: at "WKSP_DAVIDN4ITTEST.STOCK_PKG", line 18 ORA-01536: space quota exceeded for tablespace 'APEX_BIGFILE_INSTANCE_TBS3' ORA-06512: at "WKSP_DAVIDN4ITTEST.STOCK_PKG", line 6 ORA-06512: at line 2
