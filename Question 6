@@ -1,0 +1,74 @@
+Explanation:
+
+The PL/SQL package stock_pkg provides a structured way to capture and store historical stock data from item_loc_soh into item_loc_soh_history. This is essential for auditing, tracking changes, and analyzing past stock levels.
+
+p_loc (Optional Parameter):
+-If p_loc is provided → Copies stock history only for the specified location.
+-If p_loc is NULL → Copies all stock history.
+
+Commit:
+-Ensures that changes are saved permanently after the bulk insert.
+-Avoids leaving transactions open, which could lead to contention.
+
+When and why would to use this procedure?
+-Scheduled Stock Backups: Run nightly to store daily stock levels.
+-On-Demand Analysis: If managers need historical stock data for audits.
+-Before Large Updates or Deletions: To create a snapshot before modifying stock data.
+
+Error Handling (EXCEPTION Block):
+-Captures any unexpected errors and prevents data inconsistencies.
+-Uses SQLERRM (error message) and SQLCODE (error number) to diagnose issues.
+-If an error occurs, ROLLBACK ensures no partial inserts happen.
+-Adds a timestamp column in item_loc_soh_history to track when the data was saved.
+
+
+Error Logging (error_log Table):
+-Stores the error details in a table for later debugging.
+-Error_log table code below ***
+
+
+SQL Implementation:
+
+CREATE OR REPLACE PACKAGE stock_pkg AS
+    PROCEDURE save_stock_history(p_loc NUMBER DEFAULT NULL);
+END stock_pkg;
+/
+
+CREATE OR REPLACE PACKAGE BODY stock_pkg AS
+    PROCEDURE save_stock_history(p_loc NUMBER DEFAULT NULL) IS
+        v_error_message VARCHAR2(4000);
+        v_error_code NUMBER;
+    BEGIN
+        INSERT INTO item_loc_soh_history (item, loc, dept, unit_cost, stock_on_hand, stock_value, timestamp)
+        SELECT item, loc, dept, unit_cost, stock_on_hand, (unit_cost * stock_on_hand), SYSTIMESTAMP
+        FROM item_loc_soh
+        WHERE p_loc IS NULL OR loc = p_loc;
+
+        COMMIT;
+    EXCEPTION
+        WHEN OTHERS THEN
+
+            v_error_message := SQLERRM;
+            v_error_code := SQLCODE;
+            
+            INSERT INTO error_log (error_timestamp, error_code, error_message, procedure_name)
+            VALUES (SYSTIMESTAMP, v_error_code, v_error_message, 'save_stock_history');
+
+            ROLLBACK;
+
+    END save_stock_history;
+END stock_pkg;
+/
+
+
+******
+CREATE TABLE error_log (
+    error_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    error_timestamp TIMESTAMP DEFAULT SYSTIMESTAMP,
+    error_code NUMBER,
+    error_message VARCHAR2(4000),
+    procedure_name VARCHAR2(100)
+);
+****
+
+
