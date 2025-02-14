@@ -3,7 +3,7 @@
 Definition:
 To ensure data integrity and optimize queries, we define primary keys (PK) and indexes. The PK uniquely identifies each row, while indexes speed up searches.
 
-Code:
+SQL Implementation:
 ALTER TABLE item ADD CONSTRAINT pk_item PRIMARY KEY (item);
 ALTER TABLE loc ADD CONSTRAINT pk_loc PRIMARY KEY (loc);
 ALTER TABLE item_loc_soh ADD CONSTRAINT pk_item_loc_soh PRIMARY KEY (item, loc);
@@ -40,7 +40,7 @@ HAVING COUNT(*) > 1;
 Definition:
 A foreign key (FK) is a database constraint that ensures referential integrity by enforcing a relationship between two tables. It ensures that a column in one table (child table) references a valid primary key in another table (parent table).
 
-Code:
+SQL Implementation:
 ALTER TABLE item_loc_soh ADD CONSTRAINT fk_item FOREIGN KEY (item) REFERENCES item(item);
 ALTER TABLE item_loc_soh ADD CONSTRAINT fk_loc FOREIGN KEY (loc) REFERENCES loc(loc);
 
@@ -53,7 +53,7 @@ fk_loc ensures that loc in item_loc_soh exists in loc → Ensures stock is only 
 Definition:
 An index is a database structure that improves query performance by allowing faster data lookups. Instead of scanning the entire table, indexes provide a structured way to access data efficiently.
 
-Code:
+SQL Implementation:
 CREATE INDEX idx_item_loc_soh_dept ON item_loc_soh (dept);
 CREATE INDEX idx_item_loc_soh_loc ON item_loc_soh (loc);
 
