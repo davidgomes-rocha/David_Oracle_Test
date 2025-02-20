@@ -1,3 +1,5 @@
+4. Create a view that can be used at screen level to show only the required fields
+
 SQL Implementation:
 CREATE VIEW v_stock_summary AS
 SELECT item, loc, dept, unit_cost, stock_on_hand, (unit_cost * stock_on_hand) AS stock_value
