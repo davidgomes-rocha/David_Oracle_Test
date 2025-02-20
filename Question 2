@@ -1,3 +1,5 @@
+2. Your suggestion for table data management and data access considering the application usage, for example, partition...
+
 Explanation:
 
 Since most queries filter by dept, we use partitioning to optimize performance. This reduces full table scans by limiting queries to relevant partitions.
