@@ -1,3 +1,5 @@
+7. Create a data filter mechanism that can be used at screen level to filter out the data that user can see accordingly to dept association (created previously)
+
 Objective
 The goal is to restrict user access to stock data based on their assigned departments. This ensures that:
 -Users can only view data relevant to their role.
