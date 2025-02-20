@@ -1,4 +1,5 @@
-Objective:
+12. Create a program (plsql and/or java, or any other language) that can extract to a flat file (csv), 1 file per location: the item, department unit cost, stock on hand quantity and stock value.
+Creating the 1000 files should take less than 30s.Objective:
 
 The goal is to export stock data for each location (loc) into separate CSV files.
 
