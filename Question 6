@@ -1,3 +1,5 @@
+6. Create a package with procedure or function that can be invoked by store or all stores to save the item_loc_soh to a new table that will contain the same information plus the stock value per item/loc (unit_cost*stock_on_hand)
+
 Explanation:
 
 The PL/SQL package stock_pkg provides a structured way to capture and store historical stock data from item_loc_soh into item_loc_soh_history. This is essential for auditing, tracking changes, and analyzing past stock levels.
