@@ -1,3 +1,5 @@
+8. Create a pipeline function to be used in the location list of values (drop down)
+
 Objective:
 
 The goal is to optimize the retrieval of location descriptions by using a pipelined function.
