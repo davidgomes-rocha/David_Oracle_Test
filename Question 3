@@ -1,3 +1,5 @@
+3. Your suggestion to avoid row contention at table level parameter because of high level of concurrency
+
 Explanation:
 
 To reduce contention and improve concurrency:
